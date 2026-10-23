@@ -228,7 +228,7 @@ function ensure(el){
  const task=factory.create(el.id,{url:'https://kinescope.io/'+el.dataset.video,size:{width:'100%',height:'100%'},behavior:{localStorage:false,autoPlay:false,autoPause:false,muted:true,loop:true,playsInline:true},ui:{controls:false,mainPlayButton:false,language:'ru'}}).then(p=>{
   players.set(el.id,p);const slide=el.closest('.reel-slide');
   if(slide){
-   p.on(p.Events.Playing,()=>{if(!wanted(el)){safe(p.pause());return}syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true});
+   p.on(p.Events.Playing,()=>{if(!wanted(el)){safe(p.pause());return}syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true;preloadNextReel()});
    p.on(p.Events.Pause,()=>syncPaused(slide,true));
    p.on(p.Events.TimeUpdate,e=>{p.getDuration().then(d=>{slide.querySelector('.reel-progress i').style.width=(d?100*e.data.currentTime/d:0)+'%'}).catch(()=>{})});
    p.on(p.Events.Error,()=>{slide.querySelector('.reel-unavailable').hidden=false});
@@ -239,6 +239,17 @@ function ensure(el){
  pending.set(el.id,task);return task;
 }
 function syncPlayback(){document.querySelectorAll('.kinescope-player').forEach(el=>{if(wanted(el))ensure(el).then(async p=>{if(p&&wanted(el)){try{if(soundOn)await p.unmute();else await p.mute();if(wanted(el))await p.play()}catch{const slide=el.closest('.reel-slide');if(slide)syncPaused(slide,true)}}});else if(players.has(el.id))safe(players.get(el.id).pause())})}
+
+/* Заранее создаём только следующий плеер. Остальные ролики не загружаем,
+   чтобы не расходовать мобильный трафик и память. */
+function preloadNextReel(){
+  const nextIndex = reelIndex + 1;
+  if (nextIndex >= slides.length) return;
+  const nextEl = slides[nextIndex].querySelector('.kinescope-player');
+  if (nextEl && !players.has(nextEl.id) && !pending.has(nextEl.id)) {
+    ensure(nextEl);
+  }
+}
 window.onKinescopeIframeAPIReady=f=>{factory=f;syncPlayback()};
 
 function updateReels(){if(!feed.clientHeight)return;const index=Math.max(0,Math.min(slides.length-1,Math.round(feed.scrollTop/feed.clientHeight)));const changed=index!==reelIndex;reelIndex=index;document.getElementById('reel-count').textContent=(index+1)+' / '+slides.length;prevBtn.disabled=index===0;nextBtn.disabled=index===slides.length-1;if(changed)syncPlayback()}
@@ -256,28 +267,41 @@ function openReels(){
   syncPlayback();
 }
 
-/* Кнопка "Включить звук": тап = user gesture → unmute разрешён.
-   Для Safari: после unmute сразу play() текущего видео. */
-document.getElementById('sound-gate').addEventListener('click',async function(){
-  this.hidden=true;
-  soundOn=true;
-  // Обновим иконки на всех слайдах
-  slides.forEach(s=>{const b=s.querySelector('.sound-toggle');if(b){b.innerHTML=ICON_SOUND_ON;b.setAttribute('aria-label','Выключить звук')}});
-  // Для уже созданных плееров — unmute + (для Safari) сразу play
-  for(const [id,p] of players){
-    try{
-      await p.unmute();
-      await p.setVolume(1);
-    }catch(e){}
-  }
-  // Для текущего — обязательно play, чтобы не встало на паузу
-  const currentSlide=slides[reelIndex];
-  const curEl=currentSlide.querySelector('.kinescope-player');
-  if(players.has(curEl.id)){
-    try{await players.get(curEl.id).play()}catch(e){}
-  } else {
-    // Ещё не создан — ensure создаст и запустит со soundOn=true
-    ensure(curEl);
+/* Включение звука: работаем только с текущим видео, не трогаем
+   остальные плееры — это предотвращает гонки и случайную паузу на телефонах. */
+document.getElementById('sound-gate').addEventListener('click', async function () {
+  const button = this;
+  const currentSlide = slides[reelIndex];
+  const curEl = currentSlide && currentSlide.querySelector('.kinescope-player');
+  if (!curEl) return;
+
+  soundOn = true;
+
+  slides.forEach(slide => {
+    const b = slide.querySelector('.sound-toggle');
+    if (b) {
+      b.innerHTML = ICON_SOUND_ON;
+      b.setAttribute('aria-label', 'Выключить звук');
+    }
+  });
+
+  // Если плеер ещё загружается, ensure дождётся его создания.
+  const p = await ensure(curEl);
+  if (!p || !wanted(curEl)) return;
+
+  try {
+    await p.unmute();
+    await p.setVolume(1);
+
+    // Повторная проверка важна при быстром свайпе на другой ролик.
+    if (wanted(curEl)) {
+      await p.play();
+      button.hidden = true;
+    }
+  } catch (error) {
+    // Не скрываем кнопку, чтобы пользователь мог повторить попытку.
+    console.error('Не удалось включить звук Kinescope:', error);
+    button.hidden = false;
   }
 });
 
