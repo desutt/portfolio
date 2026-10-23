@@ -208,7 +208,7 @@ document.querySelectorAll('.showcase-media').forEach(btn=>{
   });
 });
 
-/* === Лента рилс — ОРИГИНАЛЬНАЯ логика, только soundGate добавлен === */
+/* === Лента рилс === */
 const viewer=document.getElementById('reels-viewer'),feed=document.querySelector('.reels-feed'),slides=[...document.querySelectorAll('.reel-slide')],prevBtn=document.getElementById('reel-prev'),nextBtn=document.getElementById('reel-next');
 let reelIndex=0,oldOverflow='',soundOn=false,factory=null;
 const players=new Map(),pending=new Map();
@@ -228,7 +228,7 @@ function ensure(el){
  const task=factory.create(el.id,{url:'https://kinescope.io/'+el.dataset.video,size:{width:'100%',height:'100%'},behavior:{localStorage:false,autoPlay:false,autoPause:false,muted:true,loop:true,playsInline:true},ui:{controls:false,mainPlayButton:false,language:'ru'}}).then(p=>{
   players.set(el.id,p);const slide=el.closest('.reel-slide');
   if(slide){
-   p.on(p.Events.Playing,()=>{if(!wanted(el)){safe(p.pause());return}syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true;preloadNextReel()});
+   p.on(p.Events.Playing,()=>{if(!wanted(el)){safe(p.pause());return}syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true});
    p.on(p.Events.Pause,()=>syncPaused(slide,true));
    p.on(p.Events.TimeUpdate,e=>{p.getDuration().then(d=>{slide.querySelector('.reel-progress i').style.width=(d?100*e.data.currentTime/d:0)+'%'}).catch(()=>{})});
    p.on(p.Events.Error,()=>{slide.querySelector('.reel-unavailable').hidden=false});
@@ -239,17 +239,6 @@ function ensure(el){
  pending.set(el.id,task);return task;
 }
 function syncPlayback(){document.querySelectorAll('.kinescope-player').forEach(el=>{if(wanted(el))ensure(el).then(async p=>{if(p&&wanted(el)){try{if(soundOn)await p.unmute();else await p.mute();if(wanted(el))await p.play()}catch{const slide=el.closest('.reel-slide');if(slide)syncPaused(slide,true)}}});else if(players.has(el.id))safe(players.get(el.id).pause())})}
-
-/* Заранее создаём только следующий плеер. Остальные ролики не загружаем,
-   чтобы не расходовать мобильный трафик и память. */
-function preloadNextReel(){
-  const nextIndex = reelIndex + 1;
-  if (nextIndex >= slides.length) return;
-  const nextEl = slides[nextIndex].querySelector('.kinescope-player');
-  if (nextEl && !players.has(nextEl.id) && !pending.has(nextEl.id)) {
-    ensure(nextEl);
-  }
-}
 window.onKinescopeIframeAPIReady=f=>{factory=f;syncPlayback()};
 
 function updateReels(){if(!feed.clientHeight)return;const index=Math.max(0,Math.min(slides.length-1,Math.round(feed.scrollTop/feed.clientHeight)));const changed=index!==reelIndex;reelIndex=index;document.getElementById('reel-count').textContent=(index+1)+' / '+slides.length;prevBtn.disabled=index===0;nextBtn.disabled=index===slides.length-1;if(changed)syncPlayback()}
@@ -257,7 +246,6 @@ function moveReel(offset){feed.scrollTo({top:Math.max(0,Math.min(slides.length-1
 function openReels(){
   oldOverflow=document.body.style.overflow;
   document.body.style.overflow='hidden';
-  // При каждом открытии — звук выключен по умолчанию, показываем плашку
   soundOn=false;
   document.getElementById('sound-gate').hidden=false;
   viewer.showModal();
@@ -265,64 +253,68 @@ function openReels(){
   feed.scrollTop=0;
   updateReels();
   syncPlayback();
-  // Заранее создаём текущий плеер в беззвучном режиме.
-  const firstEl = slides[reelIndex] && slides[reelIndex].querySelector('.kinescope-player');
-  if (firstEl) ensure(firstEl);
 }
 
-/* iPhone Safari: сначала запускаем ролик без звука, а по нажатию
-   вызываем unmute/play сразу в обработчике жеста пользователя. */
-document.getElementById('sound-gate').addEventListener('click', function () {
+/* === Кнопка "Включить звук" — перезагрузка iframe с muted=0 для Safari === */
+document.getElementById('sound-gate').addEventListener('click', async function() {
   const button = this;
   const currentSlide = slides[reelIndex];
-  const curEl = currentSlide && currentSlide.querySelector('.kinescope-player');
+  const curEl = currentSlide.querySelector('.kinescope-player');
   if (!curEl) return;
 
-  soundOn = true;
+  const videoId = curEl.dataset.video;
 
-  slides.forEach(slide => {
-    const b = slide.querySelector('.sound-toggle');
-    if (b) {
-      b.innerHTML = ICON_SOUND_ON;
-      b.setAttribute('aria-label', 'Выключить звук');
-    }
-  });
-
-  // Важно для iOS: не ждать ensure()/unmute() перед вызовом play(),
-  // иначе Safari может потерять пользовательский жест и остановить видео.
-  const p = players.get(curEl.id);
-  if (!p) {
-    // Плеер создаётся заранее; если он ещё не готов, кнопка остаётся видимой.
-    ensure(curEl).then(createdPlayer => {
-      if (!createdPlayer || !wanted(curEl)) return;
-      const unmuteTask = createdPlayer.unmute();
-      const volumeTask = createdPlayer.setVolume(1);
-      const playTask = createdPlayer.play();
-      Promise.allSettled([unmuteTask, volumeTask, playTask]).then(results => {
-        if (results.some(result => result.status === 'rejected')) {
-          console.warn('Safari не разрешил включить звук сразу. Нажмите кнопку ещё раз.');
-          button.hidden = false;
-        } else if (wanted(curEl)) {
-          button.hidden = true;
-        }
-      });
-    });
-    return;
+  // Сохраняем текущее время
+  let currentTime = 0;
+  const oldP = players.get(curEl.id);
+  if (oldP) {
+    try { currentTime = await oldP.getCurrentTime(); } catch(e) {}
   }
 
-  // Все команды вызываются синхронно в рамках тапа, без await между ними.
-  const unmuteTask = p.unmute();
-  const volumeTask = p.setVolume(1);
-  const playTask = p.play();
+  // Создаём новый iframe с muted=0
+  const newIframe = document.createElement('iframe');
+  for (const attr of curEl.attributes) {
+    newIframe.setAttribute(attr.name, attr.value);
+  }
+  newIframe.id = 'reel-player-' + reelIndex + '-snd';
+  newIframe.src = `https://kinescope.io/embed/${videoId}?autoplay=1&muted=0&playsinline=1`;
 
-  Promise.allSettled([unmuteTask, volumeTask, playTask]).then(results => {
-    if (results.some(result => result.status === 'rejected')) {
-      console.warn('Не удалось включить звук в Safari:', results);
-      button.hidden = false;
-    } else if (wanted(curEl)) {
-      button.hidden = true;
-    }
+  curEl.parentNode.replaceChild(newIframe, curEl);
+
+  // Удаляем старый плеер
+  if (players.has(curEl.id)) players.delete(curEl.id);
+  if (pending.has(curEl.id)) pending.delete(curEl.id);
+
+  // Создаём новый плеер через API
+  const newP = await factory.create(newIframe.id, {
+    url: 'https://kinescope.io/' + videoId,
+    size: { width: '100%', height: '100%' },
+    behavior: { localStorage: false, autoPlay: true, autoPause: false, muted: false, loop: true, playsInline: true },
+    ui: { controls: false, mainPlayButton: false, language: 'ru' }
   });
+
+  players.set(newIframe.id, newP);
+
+  newP.on(newP.Events.Playing, () => { if (wanted(newIframe)) syncPaused(currentSlide, false); });
+  newP.on(newP.Events.Pause, () => syncPaused(currentSlide, true));
+  newP.on(newP.Events.TimeUpdate, e => {
+    newP.getDuration().then(d => {
+      currentSlide.querySelector('.reel-progress i').style.width = (d ? 100 * e.data.currentTime / d : 0) + '%';
+    }).catch(() => {});
+  });
+
+  // Восстанавливаем время
+  if (currentTime > 0) {
+    try { await newP.seek(currentTime); } catch(e) {}
+  }
+
+  soundOn = true;
+  slides.forEach(s => {
+    const b = s.querySelector('.sound-toggle');
+    if (b) { b.innerHTML = ICON_SOUND_ON; b.setAttribute('aria-label', 'Выключить звук'); }
+  });
+
+  button.hidden = true;
 });
 
 document.getElementById('close-reels').addEventListener('click',()=>viewer.close());
