@@ -29,7 +29,7 @@
   .reels-controls button{padding:6px 12px;background:#2229}
   .reels-controls #reel-count{font-size:10px}
   .reels-bottom{display:none}
-  .sound-gate{top:auto;bottom:20px;padding:12px 20px;font-size:13px}
+  .sound-gate{top:auto;bottom:16px;padding:8px 13px;font-size:11px;gap:7px;box-shadow:0 3px 12px rgba(0,0,0,.45)}.sound-gate svg{width:16px;height:16px}
 }
 
 .work .tag,.card-number,.strip{display:none}.section{padding-top:65px}.contact{margin-top:65px}.price-card h3{margin-top:8px}
@@ -265,11 +265,14 @@ function openReels(){
   feed.scrollTop=0;
   updateReels();
   syncPlayback();
+  // Заранее создаём текущий плеер в беззвучном режиме.
+  const firstEl = slides[reelIndex] && slides[reelIndex].querySelector('.kinescope-player');
+  if (firstEl) ensure(firstEl);
 }
 
-/* Включение звука: работаем только с текущим видео, не трогаем
-   остальные плееры — это предотвращает гонки и случайную паузу на телефонах. */
-document.getElementById('sound-gate').addEventListener('click', async function () {
+/* iPhone Safari: сначала запускаем ролик без звука, а по нажатию
+   вызываем unmute/play сразу в обработчике жеста пользователя. */
+document.getElementById('sound-gate').addEventListener('click', function () {
   const button = this;
   const currentSlide = slides[reelIndex];
   const curEl = currentSlide && currentSlide.querySelector('.kinescope-player');
@@ -285,24 +288,41 @@ document.getElementById('sound-gate').addEventListener('click', async function (
     }
   });
 
-  // Если плеер ещё загружается, ensure дождётся его создания.
-  const p = await ensure(curEl);
-  if (!p || !wanted(curEl)) return;
+  // Важно для iOS: не ждать ensure()/unmute() перед вызовом play(),
+  // иначе Safari может потерять пользовательский жест и остановить видео.
+  const p = players.get(curEl.id);
+  if (!p) {
+    // Плеер создаётся заранее; если он ещё не готов, кнопка остаётся видимой.
+    ensure(curEl).then(createdPlayer => {
+      if (!createdPlayer || !wanted(curEl)) return;
+      const unmuteTask = createdPlayer.unmute();
+      const volumeTask = createdPlayer.setVolume(1);
+      const playTask = createdPlayer.play();
+      Promise.allSettled([unmuteTask, volumeTask, playTask]).then(results => {
+        if (results.some(result => result.status === 'rejected')) {
+          console.warn('Safari не разрешил включить звук сразу. Нажмите кнопку ещё раз.');
+          button.hidden = false;
+        } else if (wanted(curEl)) {
+          button.hidden = true;
+        }
+      });
+    });
+    return;
+  }
 
-  try {
-    await p.unmute();
-    await p.setVolume(1);
+  // Все команды вызываются синхронно в рамках тапа, без await между ними.
+  const unmuteTask = p.unmute();
+  const volumeTask = p.setVolume(1);
+  const playTask = p.play();
 
-    // Повторная проверка важна при быстром свайпе на другой ролик.
-    if (wanted(curEl)) {
-      await p.play();
+  Promise.allSettled([unmuteTask, volumeTask, playTask]).then(results => {
+    if (results.some(result => result.status === 'rejected')) {
+      console.warn('Не удалось включить звук в Safari:', results);
+      button.hidden = false;
+    } else if (wanted(curEl)) {
       button.hidden = true;
     }
-  } catch (error) {
-    // Не скрываем кнопку, чтобы пользователь мог повторить попытку.
-    console.error('Не удалось включить звук Kinescope:', error);
-    button.hidden = false;
-  }
+  });
 });
 
 document.getElementById('close-reels').addEventListener('click',()=>viewer.close());
