@@ -5,7 +5,6 @@
 
 #reels-viewer{padding:0;width:100vw;max-width:none;height:100dvh;max-height:none;border:0;border-radius:0;background:#0c0c0c;color:var(--ink);overflow:hidden}#reels-viewer[open]{display:flex;flex-direction:column}.reels-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 28px;border-bottom:1px solid #333;flex-shrink:0}.reels-top strong{font-size:17px}.reels-top button,.reels-controls button{background:#242424;color:#eee;border:1px solid #555;border-radius:30px;padding:10px 17px}.reels-layout{flex:1;min-height:0;position:relative}.reels-feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}.reels-feed::-webkit-scrollbar{display:none}.reel-slide{height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:18px 80px}.reel-frame{height:100%;max-height:800px;aspect-ratio:9/16;max-width:100%;position:relative;overflow:hidden;border-radius:12px;background:#171717;color:white;isolation:isolate;padding:0}.reels-controls{position:absolute;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;align-items:center}.reels-controls button:disabled{opacity:.3;cursor:default}.reels-bottom{text-align:center;padding:12px;color:#aaa;font-size:12px;border-top:1px solid #333;flex-shrink:0}
 
-/* Узкие рилсы на мобилках - ИСПРАВЛЕНО */
 @media(max-width:600px){
   .reels-top{padding:12px 16px}
   .reels-top strong{font-size:14px}
@@ -24,7 +23,6 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 
 .icon{display:inline-block;vertical-align:middle;width:1em;height:1em;fill:currentColor}
 
-/* == Шоукейс Рилсы / Анимации / Трейлеры == */
 .showcase-head{margin:44px 0 14px}
 .showcase{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .showcase-item{min-width:0}
@@ -38,10 +36,7 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
   transition:transform .25s ease;
 }
 .showcase-media:hover{transform:translateY(-2px)}
-.showcase-media::before{
-  content:'';position:absolute;inset:0;background:rgba(0,0,0,.25);
-  transition:background .2s;
-}
+.showcase-media::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.25);transition:background .2s}
 .showcase-media:hover::before{background:rgba(0,0,0,.42)}
 .showcase-play{
   position:relative;z-index:1;width:68px;height:68px;border-radius:50%;
@@ -58,7 +53,6 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 }
 @media(max-width:700px){.showcase{grid-template-columns:1fr;gap:20px}}
 
-/* == Прочие работы == */
 .other-title{font-size:17px;font-weight:500;letter-spacing:-.3px;margin:0 0 12px}
 .other-frame{
   position:relative;display:block;width:100%;aspect-ratio:16/9;
@@ -79,7 +73,6 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 }
 .play-badge svg{width:24px;height:24px;fill:currentColor}
 
-/* == Полноэкранный плеер == */
 #fs-player{
   padding:0;width:100vw;max-width:none;height:100dvh;max-height:none;
   border:0;border-radius:0;background:#000;color:#fff;overflow:hidden;
@@ -103,11 +96,9 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
   display:grid;place-content:center;
 }
 
-/* == Контакты / Telegram == */
 .contact .tg{margin-top:14px;font-size:14px}
 .contact .tg a{text-decoration:underline;text-underline-offset:3px;font-weight:700}
 
-/* == Бриф / Telegram-first == */
 .tg-button{
   display:flex;align-items:center;justify-content:center;gap:10px;
   background:#229ED9;color:#fff;border-radius:40px;
@@ -119,7 +110,6 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 .tg-icon{width:22px;height:22px;fill:currentColor;flex-shrink:0}
 .tg-hint{font-size:12px;color:#999;margin:0 0 20px;line-height:1.6}
 
-/* == Included block внутри Монтаж + съёмка == */
 .included .scope-list{margin:0;flex:0}
 .included .scope-list li{border-top:0;border-bottom:1px solid #ffffff22;padding:10px 0}
 .included .scope-list li:first-child{padding-top:2px}
@@ -131,7 +121,7 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 <section class="contact" id="contact"><div><span class="tiny">Связаться</span><h2 style="margin-top:25px">Хочу видео</h2><p>Напишите, какое видео нужно и к какому сроку.</p><p class="tg">Telegram: <a href="https://t.me/desudesubb" rel="noopener" target="_blank">@desudesubb</a></p></div><button class="button" data-package="Пока не определились">Обсудить проект →</button></section></main><footer><span>© 2026 Софья Вертински · Рилсмейкер и монтажер</span></footer></div>
 
 <!-- Прочие работы -->
-<dialog aria-labelledby="other-title" id="other-viewer"><div class="other-header"><h2 id="other-title">Прочие работы</h2><button autofocus="" class="tab" id="close-other">Закрыть ×</button></div><div class="other-grid"><article class="other-video"><h3 class="other-title">Анимация для MSI</h3><button aria-label="Смотреть — Анимация для MSI" class="other-frame" data-video-id="iHHa5aHamnUtqUhXdgmUrS" data-poster="https://kinescope.io/iHHa5aHamnUtqUhXdgmUrS/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article><article class="other-video"><h3 class="other-title">Работа для Московской Школы Кино</h3><button aria-label="Смотреть — Работа для Московской Школы Кино" class="other-frame" data-video-id="jqnXXzAJ4U4qGSmGK4c2ao" data-poster="https://kinescope.io/jqnXXzAJ4U4qGSmGK4c2ao/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article></div></dialog>
+<dialog aria-labelledby="other-title" id="other-viewer"><div class="other-header"><h2 id="other-title">Прочие работы</h2><button autofocus="" class="tab" id="close-other">Закрыть ×</button></div><div class="other-grid"><article class="other-video"><h3 class="other-title">Анимация для MSI</h3><button aria-label="Смотреть — Анимация для MSI" class="other-frame" data-video-id="ghMPyDEVCh2fjwNVXQpXdQ" data-poster="https://kinescope.io/iHHa5aHamnUtqUhXdgmUrS/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article><article class="other-video"><h3 class="other-title">Работа для Московской Школы Кино</h3><button aria-label="Смотреть — Работа для Московской Школы Кино" class="other-frame" data-video-id="mWAQ3fW8FPZLPhJ7xcn1hz" data-poster="https://kinescope.io/jqnXXzAJ4U4qGSmGK4c2ao/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article></div></dialog>
 
 <!-- Полноэкранный плеер -->
 <dialog id="fs-player"><div class="fs-media"></div><button aria-label="Закрыть" class="fs-close" type="button">×</button></dialog>
@@ -220,7 +210,11 @@ function ensure(el){
  const task=factory.create(el.id,{url:'https://kinescope.io/'+el.dataset.video,size:{width:'100%',height:'100%'},behavior:{localStorage:false,autoPlay:false,autoPause:false,muted:true,loop:true,playsInline:true},ui:{controls:false,mainPlayButton:false,language:'ru'}}).then(p=>{
   players.set(el.id,p);const slide=el.closest('.reel-slide');
   if(slide){
-   p.on(p.Events.Playing,()=>{if(!wanted(el)){safe(p.pause());return}syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true});
+   p.on(p.Events.Playing,()=>{
+     if(!wanted(el)){safe(p.pause());return}
+     if(soundOn){safe(p.unmute())}
+     syncPaused(slide,false);slide.querySelector('.reel-unavailable').hidden=true
+   });
    p.on(p.Events.Pause,()=>syncPaused(slide,true));
    p.on(p.Events.TimeUpdate,e=>{p.getDuration().then(d=>{slide.querySelector('.reel-progress i').style.width=(d?100*e.data.currentTime/d:0)+'%'}).catch(()=>{})});
    p.on(p.Events.Error,()=>{slide.querySelector('.reel-unavailable').hidden=false});
