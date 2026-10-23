@@ -5,21 +5,6 @@
 
 #reels-viewer{padding:0;width:100vw;max-width:none;height:100dvh;max-height:none;border:0;border-radius:0;background:#0c0c0c;color:var(--ink);overflow:hidden}#reels-viewer[open]{display:flex;flex-direction:column}.reels-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 28px;border-bottom:1px solid #333;flex-shrink:0}.reels-top strong{font-size:17px}.reels-top button,.reels-controls button{background:#242424;color:#eee;border:1px solid #555;border-radius:30px;padding:10px 17px}.reels-layout{flex:1;min-height:0;position:relative}.reels-feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}.reels-feed::-webkit-scrollbar{display:none}.reel-slide{height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:18px 80px}.reel-frame{height:100%;max-height:800px;aspect-ratio:9/16;max-width:100%;position:relative;overflow:hidden;border-radius:12px;background:#171717;color:white;isolation:isolate;padding:0}.reels-controls{position:absolute;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;align-items:center}.reels-controls button:disabled{opacity:.3;cursor:default}.reels-bottom{text-align:center;padding:12px;color:#aaa;font-size:12px;border-top:1px solid #333;flex-shrink:0}
 
-.sound-gate{
-  position:absolute;left:50%;top:20px;transform:translateX(-50%);
-  background:var(--orange);color:#111;border:0;
-  padding:13px 24px;border-radius:100px;
-  font-size:14px;font-weight:700;
-  display:flex;align-items:center;gap:10px;
-  z-index:20;cursor:pointer;
-  box-shadow:0 6px 24px rgba(0,0,0,.55);
-  animation:soundGatePulse 2s infinite;
-}
-.sound-gate svg{width:20px;height:20px;fill:currentColor}
-.sound-gate[hidden]{display:none}
-@keyframes soundGatePulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.04)}}
-@media(prefers-reduced-motion:reduce){.sound-gate{animation:none}}
-
 @media(max-width:600px){
   .reels-top{padding:12px 16px}
   .reels-top strong{font-size:14px}
@@ -29,7 +14,6 @@
   .reels-controls button{padding:6px 12px;background:#2229}
   .reels-controls #reel-count{font-size:10px}
   .reels-bottom{display:none}
-  .sound-gate{top:auto;bottom:16px;padding:8px 13px;font-size:11px;gap:7px;box-shadow:0 3px 12px rgba(0,0,0,.45)}.sound-gate svg{width:16px;height:16px}
 }
 
 .work .tag,.card-number,.strip{display:none}.section{padding-top:65px}.contact{margin-top:65px}.price-card h3{margin-top:8px}
@@ -111,6 +95,17 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
   color:#fff;font-size:22px;cursor:pointer;line-height:1;
   display:grid;place-content:center;
 }
+.fs-sound-btn{
+  position:absolute;left:50%;bottom:24px;transform:translateX(-50%);
+  background:var(--orange);color:#111;border:0;
+  padding:12px 22px;border-radius:100px;
+  font-size:14px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+  z-index:5;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.fs-sound-btn svg{width:18px;height:18px;fill:currentColor}
+.fs-sound-btn[hidden]{display:none}
 
 .contact .tg{margin-top:14px;font-size:14px}
 .contact .tg a{text-decoration:underline;text-underline-offset:3px;font-weight:700}
@@ -139,13 +134,13 @@ h1{font-size:clamp(58px,7.4vw,106px);max-width:1100px}h1 .for-you{font-size:.65e
 <!-- Прочие работы -->
 <dialog aria-labelledby="other-title" id="other-viewer"><div class="other-header"><h2 id="other-title">Прочие работы</h2><button autofocus="" class="tab" id="close-other">Закрыть ×</button></div><div class="other-grid"><article class="other-video"><h3 class="other-title">Анимация для MSI</h3><button aria-label="Смотреть — Анимация для MSI" class="other-frame" data-video-id="ghMPyDEVCh2fjwNVXQpXdQ" data-poster="https://kinescope.io/iHHa5aHamnUtqUhXdgmUrS/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article><article class="other-video"><h3 class="other-title">Работа для Московской Школы Кино</h3><button aria-label="Смотреть — Работа для Московской Школы Кино" class="other-frame" data-video-id="mWAQ3fW8FPZLPhJ7xcn1hz" data-poster="https://kinescope.io/jqnXXzAJ4U4qGSmGK4c2ao/poster.jpg" type="button"><span class="play-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button></article></div></dialog>
 
-<!-- Полноэкранный плеер -->
-<dialog id="fs-player"><div class="fs-media"></div><button aria-label="Закрыть" class="fs-close" type="button">×</button></dialog>
+<!-- Полноэкранный плеер с кнопкой звука -->
+<dialog id="fs-player"><div class="fs-media"><button class="fs-sound-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Включить звук</button></div><button aria-label="Закрыть" class="fs-close" type="button">×</button></dialog>
 
-<!-- Лента рилс -->
-<dialog aria-label="Лента рилс" id="reels-viewer"><div class="reels-top"><strong>Софья Вертински / REELS</strong><button autofocus="" id="close-reels">Закрыть ×</button></div><div class="reels-layout"><button class="sound-gate" id="sound-gate" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Включить звук</button><div aria-label="Листайте рилс вверх и вниз" class="reels-feed" tabindex="0"><article aria-label="Рилс 1 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="kcMYtQL6Er7dPZqPeDHhHS" id="reel-player-0" src="about:blank" title="Рилс 1"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/kcMYtQL6Er7dPZqPeDHhHS" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Ресторан Искра</p></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 2 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="5ovkSGVQNKYJUEVfB6fY4n" id="reel-player-1" src="about:blank" title="Рилс 2"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/5ovkSGVQNKYJUEVfB6fY4n" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Грузинский ресторан Юг</p></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 3 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="e8HJrAYq99Z9dFumwbrKAK" id="reel-player-2" src="about:blank" title="Рилс 3"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/e8HJrAYq99Z9dFumwbrKAK" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Гламурная Чифанька</p></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 4 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="vUo465LNcvvwu5pKVD7pUs" id="reel-player-3" src="about:blank" title="Рилс 4"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/vUo465LNcvvwu5pKVD7pUs" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Карго сервис F2F</p></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 5 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="jviZdaKVJG1rcJwLLnT9dd" id="reel-player-4" src="about:blank" title="Рилс 5"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/jviZdaKVJG1rcJwLLnT9dd" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 6 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="bTq81NnkmpuKmBUv7UCHk5" id="reel-player-5" src="about:blank" title="Рилс 6"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/bTq81NnkmpuKmBUv7UCHk5" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 7 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="27udmcwJcG8R8hcqu7Dc1E" id="reel-player-6" src="about:blank" title="Рилс 7"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/27udmcwJcG8R8hcqu7Dc1E" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Led technology</p></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 8 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="wg5sn8YdDwCgn5959CxUND" id="reel-player-7" src="about:blank" title="Рилс 8"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/wg5sn8YdDwCgn5959CxUND" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 9 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="cNN8qd8q5Te7uvzJRrntUX" id="reel-player-8" src="about:blank" title="Рилс 9"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/cNN8qd8q5Te7uvzJRrntUX" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 10 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="0unQW8TGJBzuc2czRD8NSc" id="reel-player-9" src="about:blank" title="Рилс 10"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/0unQW8TGJBzuc2czRD8NSc" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 11 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="iUHFwnBiK47q2MP7USvVV1" id="reel-player-10" src="about:blank" title="Рилс 11"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/iUHFwnBiK47q2MP7USvVV1" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Выключить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article></div><div class="reels-controls"><button aria-label="Предыдущий рилс" id="reel-prev">↑</button><span aria-live="polite" id="reel-count">1 / 11</span><button aria-label="Следующий рилс" id="reel-next">↓</button></div></div><div class="reels-bottom">Листайте вверх или вниз</div></dialog>
+<!-- Лента рилс (БЕЗ плавающей кнопки "Включить звук") -->
+<dialog aria-label="Лента рилс" id="reels-viewer"><div class="reels-top"><strong>Софья Вертински / REELS</strong><button autofocus="" id="close-reels">Закрыть ×</button></div><div class="reels-layout"><div aria-label="Листайте рилс вверх и вниз" class="reels-feed" tabindex="0"><article aria-label="Рилс 1 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="kcMYtQL6Er7dPZqPeDHhHS" id="reel-player-0" src="about:blank" title="Рилс 1"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/kcMYtQL6Er7dPZqPeDHhHS" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Ресторан Искра</p></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 2 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="5ovkSGVQNKYJUEVfB6fY4n" id="reel-player-1" src="about:blank" title="Рилс 2"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/5ovkSGVQNKYJUEVfB6fY4n" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Грузинский ресторан Юг</p></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 3 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="e8HJrAYq99Z9dFumwbrKAK" id="reel-player-2" src="about:blank" title="Рилс 3"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/e8HJrAYq99Z9dFumwbrKAK" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Гламурная Чифанька</p></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 4 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="vUo465LNcvvwu5pKVD7pUs" id="reel-player-3" src="about:blank" title="Рилс 4"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/vUo465LNcvvwu5pKVD7pUs" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Карго сервис F2F</p></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 5 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="jviZdaKVJG1rcJwLLnT9dd" id="reel-player-4" src="about:blank" title="Рилс 5"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/jviZdaKVJG1rcJwLLnT9dd" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 6 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="bTq81NnkmpuKmBUv7UCHk5" id="reel-player-5" src="about:blank" title="Рилс 6"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/bTq81NnkmpuKmBUv7UCHk5" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 7 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="27udmcwJcG8R8hcqu7Dc1E" id="reel-player-6" src="about:blank" title="Рилс 7"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/27udmcwJcG8R8hcqu7Dc1E" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div><p>Led technology</p></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 8 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="wg5sn8YdDwCgn5959CxUND" id="reel-player-7" src="about:blank" title="Рилс 8"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/wg5sn8YdDwCgn5959CxUND" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 9 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="cNN8qd8q5Te7uvzJRrntUX" id="reel-player-8" src="about:blank" title="Рилс 9"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/cNN8qd8q5Te7uvzJRrntUX" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 10 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="0unQW8TGJBzuc2czRD8NSc" id="reel-player-9" src="about:blank" title="Рилс 10"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/0unQW8TGJBzuc2czRD8NSc" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article><article aria-label="Рилс 11 из 11" class="reel-slide"><div class="reel-frame"><iframe allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock" allowfullscreen="" class="kinescope-player" data-kind="reel" data-video="iUHFwnBiK47q2MP7USvVV1" id="reel-player-10" src="about:blank" title="Рилс 11"></iframe><div class="reel-unavailable" hidden="">Не удалось загрузить видео. <a href="https://kinescope.io/iUHFwnBiK47q2MP7USvVV1" rel="noopener" target="_blank">Открыть видео</a></div><button aria-label="Пауза или воспроизведение" class="video-tap"></button><span class="paused-sign" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><div class="reel-overlay"><div class="reel-author"><span class="avatar">СВ</span><strong>Софья Вертински</strong></div></div><div class="reel-actions"><button aria-label="Включить звук" class="sound-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5-.5L14 11v2l2.5 2.5L18 14l-1.5-2.5L18 9l-1.5-1.5z"/></svg></button><span>Звук</span><button aria-label="Пауза" class="pause-toggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div><div class="reel-progress"><i></i></div></div></article></div><div class="reels-controls"><button aria-label="Предыдущий рилс" id="reel-prev">↑</button><span aria-live="polite" id="reel-count">1 / 11</span><button aria-label="Следующий рилс" id="reel-next">↓</button></div></div><div class="reels-bottom">Листайте вверх или вниз</div></dialog>
 
-<!-- Бриф: сначала Telegram, потом бриф -->
+<!-- Бриф -->
 <dialog id="brief">
   <button aria-label="Закрыть" class="close">×</button>
   <span class="tiny">Ваш проект</span>
@@ -183,21 +178,49 @@ document.querySelectorAll('.showcase-media, .other-frame').forEach(applyPoster);
 const otherViewer=document.getElementById('other-viewer');
 const fsPlayer=document.getElementById('fs-player');
 const fsMedia=fsPlayer.querySelector('.fs-media');
+const fsSoundBtn=fsPlayer.querySelector('.fs-sound-btn');
 let otherOverflow='';
+let currentFsVideoId=null;
 
 function openOther(){otherOverflow=document.body.style.overflow;document.body.style.overflow='hidden';otherViewer.showModal()}
 document.getElementById('close-other').addEventListener('click',()=>otherViewer.close());
 otherViewer.addEventListener('close',()=>{document.body.style.overflow=otherOverflow});
 
 function openFullscreenVideo(videoId){
-  fsMedia.innerHTML=`<iframe src="https://kinescope.io/embed/${videoId}?autoplay=1&muted=0&playsinline=1" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer" allowfullscreen title="Видео"></iframe>`;
+  currentFsVideoId=videoId;
+  // Очищаем старое
+  const oldIframe = fsMedia.querySelector('iframe');
+  if (oldIframe) oldIframe.remove();
+  // Создаём новый iframe
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://kinescope.io/embed/${videoId}?autoplay=1&muted=0&playsinline=1&controls=1`;
+  iframe.setAttribute('allow','autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer');
+  iframe.setAttribute('allowfullscreen','');
+  iframe.title = 'Видео';
+  fsMedia.insertBefore(iframe, fsMedia.firstChild);
+  fsSoundBtn.hidden = false;
   fsPlayer.showModal();
 }
+
+// Кнопка "Включить звук" в полноэкранном плеере
+fsSoundBtn.addEventListener('click', function() {
+  if (!currentFsVideoId) return;
+  const iframe = fsMedia.querySelector('iframe');
+  if (!iframe) return;
+  // Перезагружаем iframe с кэш-бастером и unmuted
+  iframe.src = `https://kinescope.io/embed/${currentFsVideoId}?autoplay=1&muted=0&playsinline=1&controls=1&t=${Date.now()}`;
+  this.hidden = true;
+});
+
 document.querySelectorAll('.other-frame').forEach(btn=>{
   btn.addEventListener('click',()=>openFullscreenVideo(btn.dataset.videoId));
 });
 fsPlayer.querySelector('.fs-close').addEventListener('click',()=>fsPlayer.close());
-fsPlayer.addEventListener('close',()=>{fsMedia.innerHTML=''});
+fsPlayer.addEventListener('close',()=>{
+  const iframe = fsMedia.querySelector('iframe');
+  if (iframe) iframe.remove();
+  currentFsVideoId = null;
+});
 fsPlayer.addEventListener('click',e=>{if(e.target===fsPlayer)fsPlayer.close()});
 
 /* === Шоукейс === */
@@ -238,6 +261,7 @@ function ensure(el){
  }).catch(()=>{const n=el.parentElement.querySelector('.reel-unavailable');if(n)n.hidden=false;pending.delete(el.id);return null});
  pending.set(el.id,task);return task;
 }
+
 function syncPlayback(){document.querySelectorAll('.kinescope-player').forEach(el=>{if(wanted(el))ensure(el).then(async p=>{if(p&&wanted(el)){try{if(soundOn)await p.unmute();else await p.mute();if(wanted(el))await p.play()}catch{const slide=el.closest('.reel-slide');if(slide)syncPaused(slide,true)}}});else if(players.has(el.id))safe(players.get(el.id).pause())})}
 window.onKinescopeIframeAPIReady=f=>{factory=f;syncPlayback()};
 
@@ -247,7 +271,6 @@ function openReels(){
   oldOverflow=document.body.style.overflow;
   document.body.style.overflow='hidden';
   soundOn=false;
-  document.getElementById('sound-gate').hidden=false;
   viewer.showModal();
   reelIndex=0;
   feed.scrollTop=0;
@@ -255,67 +278,53 @@ function openReels(){
   syncPlayback();
 }
 
-/* === Кнопка "Включить звук" — перезагрузка iframe с muted=0 для Safari === */
-document.getElementById('sound-gate').addEventListener('click', async function() {
-  const button = this;
-  const currentSlide = slides[reelIndex];
-  const curEl = currentSlide.querySelector('.kinescope-player');
-  if (!curEl) return;
-
-  const videoId = curEl.dataset.video;
-
-  // Сохраняем текущее время
+/* Перезагрузка iframe со звуком (для Safari) */
+async function reloadWithSound(slide) {
+  const oldEl = slide.querySelector('iframe.kinescope-player');
+  if (!oldEl) return null;
+  
+  const videoId = oldEl.dataset.video;
+  const oldP = players.get(oldEl.id);
   let currentTime = 0;
-  const oldP = players.get(curEl.id);
   if (oldP) {
     try { currentTime = await oldP.getCurrentTime(); } catch(e) {}
   }
-
-  // Создаём новый iframe с muted=0
+  
+  const newId = 'reel-snd-' + videoId + '-' + Date.now();
   const newIframe = document.createElement('iframe');
-  for (const attr of curEl.attributes) {
+  for (const attr of oldEl.attributes) {
     newIframe.setAttribute(attr.name, attr.value);
   }
-  newIframe.id = 'reel-player-' + reelIndex + '-snd';
+  newIframe.id = newId;
   newIframe.src = `https://kinescope.io/embed/${videoId}?autoplay=1&muted=0&playsinline=1`;
-
-  curEl.parentNode.replaceChild(newIframe, curEl);
-
-  // Удаляем старый плеер
-  if (players.has(curEl.id)) players.delete(curEl.id);
-  if (pending.has(curEl.id)) pending.delete(curEl.id);
-
-  // Создаём новый плеер через API
-  const newP = await factory.create(newIframe.id, {
+  
+  oldEl.parentNode.replaceChild(newIframe, oldEl);
+  players.delete(oldEl.id);
+  pending.delete(oldEl.id);
+  
+  const newP = await factory.create(newId, {
     url: 'https://kinescope.io/' + videoId,
     size: { width: '100%', height: '100%' },
-    behavior: { localStorage: false, autoPlay: true, autoPause: false, muted: false, loop: true, playsInline: true },
+    behavior: { autoPlay: true, muted: false, loop: true, playsInline: true },
     ui: { controls: false, mainPlayButton: false, language: 'ru' }
   });
-
-  players.set(newIframe.id, newP);
-
-  newP.on(newP.Events.Playing, () => { if (wanted(newIframe)) syncPaused(currentSlide, false); });
-  newP.on(newP.Events.Pause, () => syncPaused(currentSlide, true));
+  
+  players.set(newId, newP);
+  
+  newP.on(newP.Events.Playing, () => { if (wanted(newIframe)) syncPaused(slide, false); });
+  newP.on(newP.Events.Pause, () => syncPaused(slide, true));
   newP.on(newP.Events.TimeUpdate, e => {
     newP.getDuration().then(d => {
-      currentSlide.querySelector('.reel-progress i').style.width = (d ? 100 * e.data.currentTime / d : 0) + '%';
+      slide.querySelector('.reel-progress i').style.width = (d ? 100 * e.data.currentTime / d : 0) + '%';
     }).catch(() => {});
   });
-
-  // Восстанавливаем время
+  
   if (currentTime > 0) {
     try { await newP.seek(currentTime); } catch(e) {}
   }
-
-  soundOn = true;
-  slides.forEach(s => {
-    const b = s.querySelector('.sound-toggle');
-    if (b) { b.innerHTML = ICON_SOUND_ON; b.setAttribute('aria-label', 'Выключить звук'); }
-  });
-
-  button.hidden = true;
-});
+  
+  return newP;
+}
 
 document.getElementById('close-reels').addEventListener('click',()=>viewer.close());
 viewer.addEventListener('close',()=>{document.body.style.overflow=oldOverflow;syncPlayback()});
@@ -325,14 +334,38 @@ nextBtn.addEventListener('click',()=>moveReel(1));
 viewer.addEventListener('keydown',e=>{if(['ArrowDown','PageDown','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();moveReel(['ArrowDown','PageDown'].includes(e.key)?1:-1)}});
 
 slides.forEach(slide=>{
- const el=slide.querySelector('iframe');
- const toggle=async()=>{const p=await ensure(el);if(!p)return;try{if(await p.isPaused()){if(wanted(el))await p.play()}else await p.pause()}catch{syncPaused(slide,true)}};
+ const toggle=async()=>{
+   const el = slide.querySelector('iframe.kinescope-player');
+   const p=await ensure(el);
+   if(!p)return;
+   try{if(await p.isPaused()){if(wanted(el))await p.play()}else await p.pause()}catch{syncPaused(slide,true)}
+ };
  slide.querySelector('.video-tap').addEventListener('click',toggle);
  slide.querySelector('.pause-toggle').addEventListener('click',toggle);
- slide.querySelector('.sound-toggle').addEventListener('click',()=>{
-   soundOn=!soundOn;
-   slides.forEach(s=>{const b=s.querySelector('.sound-toggle');b.innerHTML=soundOn?ICON_SOUND_ON:ICON_SOUND_OFF;b.setAttribute('aria-label',soundOn?'Выключить звук':'Включить звук')});
-   const p=players.get(el.id);if(p)safe(soundOn?p.unmute():p.mute())
+
+ // Звук: при включении используем перезагрузку iframe (для Safari)
+ slide.querySelector('.sound-toggle').addEventListener('click', async function() {
+   if (!soundOn) {
+     // Включаем звук — перезагружаем iframe с muted=0
+     await reloadWithSound(slide);
+     soundOn = true;
+     slides.forEach(s => {
+       const b = s.querySelector('.sound-toggle');
+       b.innerHTML = ICON_SOUND_ON;
+       b.setAttribute('aria-label', 'Выключить звук');
+     });
+   } else {
+     // Выключаем звук через API
+     const el = slide.querySelector('iframe.kinescope-player');
+     const p = players.get(el.id);
+     if (p) safe(p.mute());
+     soundOn = false;
+     slides.forEach(s => {
+       const b = s.querySelector('.sound-toggle');
+       b.innerHTML = ICON_SOUND_OFF;
+       b.setAttribute('aria-label', 'Включить звук');
+     });
+   }
  });
 });
 
